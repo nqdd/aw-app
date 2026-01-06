@@ -21,7 +21,7 @@ aw-app/icons/icon.png: aw-webui/.git
 aw-webui/dist: aw-webui/.git
 	cd aw-webui && make build
 
-prebuild: aw-webui/dist node_modules aw-app/icons/icon.png install-watchers modules
+prebuild: aw-webui/dist node_modules aw-app/icons/icon.png install-watchers install-sync modules
 
 precommit: format check
 
@@ -89,12 +89,24 @@ run-watcher-afk: venv/.afk-installed
 run-watcher-window: venv/.window-installed
 	./venv/bin/aw-watcher-window
 
+# aw-sync (Rust binary)
+aw-server-rust/target/release/aw-sync:
+	cd aw-server-rust/aw-sync && cargo build --release
+
+install-sync: aw-server-rust/target/release/aw-sync
+	@echo "aw-sync built successfully"
+
+run-sync: aw-server-rust/target/release/aw-sync
+	./aw-server-rust/target/release/aw-sync daemon
+
 # Create modules directory with symlinks for app discovery
-modules: venv/.afk-installed venv/.window-installed
+modules: venv/.afk-installed venv/.window-installed aw-server-rust/target/release/aw-sync
 	mkdir -p modules
 	ln -sf ../venv/bin/aw-watcher-afk modules/aw-watcher-afk
 	ln -sf ../venv/bin/aw-watcher-window modules/aw-watcher-window
+	ln -sf ../aw-server-rust/target/release/aw-sync modules/aw-sync
 
 clean-watchers:
 	rm -rf venv modules
 	rm -f aw-watcher-window/aw_watcher_window/aw-watcher-window-macos
+	cd aw-server-rust && cargo clean
