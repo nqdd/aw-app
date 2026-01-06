@@ -1,107 +1,143 @@
-aw-app
-========
-[![Build](https://github.com/ActivityWatch/aw-app/actions/workflows/build.yml/badge.svg)](https://github.com/ActivityWatch/aw-app/actions/workflows/build.yml)
+activity-watch
+==============
+[![Build](https://github.com/nqdd/activity-watch/actions/workflows/build.yml/badge.svg)](https://github.com/nqdd/activity-watch/actions/workflows/build.yml)
 
-Experimenting with implementing ActivityWatch using [Tauri](https://tauri.app/).
+A cross-platform ActivityWatch desktop application built with [Tauri 2.x](https://tauri.app/).
 
-Holds great promise as a much simpler way to build a cross-platform version of ActivityWatch.
+This is the modern replacement for aw-qt, providing a streamlined way to run ActivityWatch on all platforms.
 
-Features:
+## Features
 
- - Tray icon
- - Module manager for watchers
- - WebView serving the web UI
- - Uses aw-server-rust by default
- - Replaces aw-qt
- - Builds like a dream, minimal custom build & release config
+ - **System Tray**: Full-featured tray icon with module management
+ - **Module Manager**: Automatic discovery, start/stop, and crash recovery for watchers
+ - **Embedded Server**: Runs aw-server-rust as part of the main executable
+ - **WebView**: Serves the aw-webui directly within the app
+ - **Single Instance**: Prevents multiple instances from running
+ - **Autostart**: Configurable system autostart with minimized launch option
+ - **Notifications**: Native system notifications via aw-notify integration
+ - **Sync Support**: Built-in aw-sync daemon support
+ - **Linux Wayland**: Auto-detection and aw-awatcher support
+ - **Log Rotation**: Automatic log file rotation (32MB max, 5 rotated files)
+ - **TOML Configuration**: User-configurable settings for port, modules, and discovery paths
 
-Benefits of Tauri:
+## Benefits of Tauri 2.x
 
- - Builds cross-platform nicely (see [their docs](https://tauri.app/v1/guides/building/cross-platform))
+ - Builds cross-platform nicely (see [their docs](https://tauri.app/start/prerequisites/))
    - Generates deb and AppImage with a simple `npx tauri build`
    - Uses Gtk on Linux, and [tao](https://github.com/tauri-apps/tao) on Windows and macOS
    - No more messy PyInstaller for the main entrypoint (aw-qt)
-   - Good [docs for code-signing](https://tauri.app/v1/guides/distribution/sign-windows) on all platforms
-   - Includes an [updater](https://tauri.app/v1/guides/distribution/updater) for `MSI`, `.AppImage`, `.app` bundle.
+   - Good [docs for code-signing](https://tauri.app/distribute/) on all platforms
+   - Includes an [updater](https://tauri.app/plugin/updater/) for `MSI`, `.AppImage`, `.app` bundle
  - Contains a webview with an easy interface to Rust code
- - [Trayicon support](https://tauri.app/v1/guides/features/system-tray/)
- - Mobile support is [WIP](https://tauri.app/blog/2022/12/09/tauri-mobile-alpha/), and will support iOS.
+ - [Tray icon support](https://tauri.app/learn/system-tray/)
+ - Mobile support available for iOS and Android
 
-# Prerequisites
+## Prerequisites
 
- - Tauri dependencies (see [their docs](https://v2.tauri.app/start/prerequisites/))
- - Node.js
- - Rust
+ - Tauri 2.x dependencies (see [their docs](https://tauri.app/start/prerequisites/))
+ - Node.js (v20.19.0 or compatible, see `.nvmrc`)
+ - Rust (Edition 2021)
+ - Python 3 with Poetry (for building watchers)
 
-# Usage
+## Usage
 
-To run:
+Clone with submodules:
+
+```sh
+git clone --recursive https://github.com/nqdd/activity-watch.git
+cd activity-watch
+```
+
+To run in development mode:
 
 ```sh
 npm install
 make dev
 ```
+
 To build:
 
 ```sh
 make build
 ```
 
-# Repo stucture
+### Available Make Commands
 
- - The frontend is in the root folder (NOTE: not yet the actual aw-webui code)
- - All rust code is in `aw-app/` (will likely be moved)
+| Command | Description |
+|---------|-------------|
+| `make build` | Full production build with prebuild step |
+| `make dev` | Development mode with hot reload |
+| `make prebuild` | Build aw-webui, install watchers, setup modules |
+| `make install-watchers` | Install both afk and window watchers |
+| `make install-sync` | Build aw-sync |
+| `make modules` | Create modules directory with symlinks |
+| `make package` | Package built artifacts (platform-specific) |
+| `make format` | Format Rust code |
+| `make check` | Run cargo check and clippy |
 
-# Roadmap
+## Project Structure
 
-Primary goal is feature-parity with aw-qt.
-Secondary goal is to add extras supported by Tauri (updater, autostart).
-
- - [x] Run aw-server-rust as part of main executable
- - [x] Run ActivityWatch web app within WebView (wry)
- - [x] Get basic module manager working
-     - [x] Start watchers
- - [x] Tray icon
-     - [x] Basic version (open, exit)
-     - [x] Menu for module manager
-     - [x] Responsive running/stopped state for watchers (no "update" button)
-     - [x] Start/stop via modules menu
-     - [x] Detect bundled & system modules
- - [x] Polish
-     - [x] Remove placeholder Vue app
-         - Or replace with new UI for module management? (a bit redundant)
-     - [x] Build aw-webui as part of build process
-     - [x] Error dialog when module crashes, restart logic
-         - https://tauri.app/plugin/dialog/
-     - [x] https://tauri.app/plugin/autostart/
-     - [x] https://tauri.app/plugin/single-instance/
-
----
-
-This project was initialized with:
-
-```sh
-sh <(curl https://create.tauri.app/sh)
+```
+activity-watch/
+├── aw-app/                  # Tauri 2.x application (Rust)
+│   ├── src/
+│   │   ├── main.rs          # Entry point
+│   │   ├── lib.rs           # Core app logic, server, tray
+│   │   ├── manager.rs       # Module process manager
+│   │   ├── dirs.rs          # Platform-specific directories
+│   │   └── logging.rs       # Log rotation setup
+│   ├── tauri.conf.json      # Tauri configuration
+│   └── capabilities/        # Tauri 2.0 security capabilities
+├── aw-webui/                # Web UI (git submodule, Vue 2.7)
+├── aw-server-rust/          # Server backend (git submodule)
+├── aw-watcher-afk/          # AFK watcher (git submodule, Python)
+├── aw-watcher-window/       # Window watcher (git submodule, Python)
+├── aw-notify/               # Notification binary
+├── modules/                 # Symlinks to built module executables
+├── venv/                    # Python virtual environment
+└── Makefile                 # Build commands
 ```
 
-<details>
-<summary>Click to expand original README</summary>
+## Configuration
 
-# Tauri + Vue 3 + TypeScript
+Configuration file location (TOML format):
+- **Linux**: `~/.config/activitywatch/aw-app/config.toml`
+- **macOS**: `~/Library/Application Support/activitywatch/aw-app/config.toml`
+- **Windows**: `%APPDATA%\activitywatch\aw-app\config.toml`
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Example configuration:
 
-## Recommended IDE Setup
+```toml
+port = 5600
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+[autostart]
+enabled = true
+minimized = true
+modules = ["aw-watcher-afk", "aw-watcher-window"]
 
-## Type Support For `.vue` Imports in TS
+# Module with custom arguments
+[autostart.modules.aw-sync]
+args = ["daemon"]
+```
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+## Log Files
 
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
+Log files with rotation (32MB max, 5 rotated files):
+- **Linux**: `~/.cache/activitywatch/aw-app/log/aw-app.log`
+- **macOS**: `~/Library/Logs/activitywatch/aw-app/aw-app.log`
+- **Windows**: `%LOCALAPPDATA%\activitywatch\aw-app\log\aw-app.log`
 
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+## Submodules
 
-</details>
+| Submodule | Description |
+|-----------|-------------|
+| [aw-webui](https://github.com/ActivityWatch/aw-webui) | Vue 2.7 web interface |
+| [aw-server-rust](https://github.com/ActivityWatch/aw-server-rust) | Rust server backend |
+| [aw-watcher-window](https://github.com/ActivityWatch/aw-watcher-window) | Window activity watcher |
+| [aw-watcher-afk](https://github.com/ActivityWatch/aw-watcher-afk) | AFK detection watcher |
+
+## Supported Platforms
+
+- macOS (x64, ARM)
+- Linux (x64, ARM) - X11 and Wayland
+- Windows (x64)
