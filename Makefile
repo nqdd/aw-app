@@ -33,19 +33,19 @@ check:
 
 package:
 ifeq ($(OS),Linux)
-	rm -rf target/package/aw-tauri
-	mkdir -p target/package/aw-tauri
-	cp aw-app/target/release/bundle/deb/*.deb target/package/aw-tauri/aw-tauri$(ARCH).deb
-	cp aw-app/target/release/bundle/rpm/*.rpm target/package/aw-tauri/aw-tauri$(ARCH).rpm
-	cp aw-app/target/release/bundle/appimage/*.AppImage target/package/aw-tauri/aw-tauri$(ARCH).AppImage
+	rm -rf target/package/aw-app
+	mkdir -p target/package/aw-app
+	cp aw-app/target/release/bundle/deb/*.deb target/package/aw-app/aw-app$(ARCH).deb
+	cp aw-app/target/release/bundle/rpm/*.rpm target/package/aw-app/aw-app$(ARCH).rpm
+	cp aw-app/target/release/bundle/appimage/*.AppImage target/package/aw-app/aw-app$(ARCH).AppImage
 
-	mkdir -p dist/aw-tauri
-	rm -rf dist/aw-tauri/*
-	cp target/package/aw-tauri/* dist/aw-tauri/
+	mkdir -p dist/aw-app
+	rm -rf dist/aw-app/*
+	cp target/package/aw-app/* dist/aw-app/
 else
 	rm -rf target/package
 	mkdir -p target/package
-	cp aw-app/target/release/aw-tauri target/package/aw-tauri
+	cp aw-app/target/release/aw-app target/package/aw-app
 
 	mkdir -p dist
 	find dist/ -maxdepth 1 -type f -delete 2>/dev/null || true

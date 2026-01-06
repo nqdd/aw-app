@@ -116,8 +116,8 @@ pub fn setup_logging() -> Result<(), fern::InitError> {
         })
         .level(module_logging_level) // Default level based on environment variables
         // Set specific log levels for modules - only show our own code
-        .level_for("aw_tauri", LevelFilter::Debug)
-        .level_for("aw_tauri_lib", logging_level);
+        .level_for("aw_app", LevelFilter::Debug)
+        .level_for("aw_app_lib", logging_level);
 
     // Configure output to file
     let file = fern::log_file(log_path)?;

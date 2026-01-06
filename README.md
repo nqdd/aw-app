@@ -1,6 +1,6 @@
-aw-tauri
+aw-app
 ========
-[![Build](https://github.com/ActivityWatch/aw-tauri/actions/workflows/build.yml/badge.svg)](https://github.com/ActivityWatch/aw-tauri/actions/workflows/build.yml)
+[![Build](https://github.com/ActivityWatch/aw-app/actions/workflows/build.yml/badge.svg)](https://github.com/ActivityWatch/aw-app/actions/workflows/build.yml)
 
 Experimenting with implementing ActivityWatch using [Tauri](https://tauri.app/).
 

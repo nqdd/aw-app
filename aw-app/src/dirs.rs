@@ -20,7 +20,7 @@ lazy_static! {
 #[cfg(not(target_os = "android"))]
 pub fn get_config_dir() -> Result<PathBuf, ()> {
     let mut dir = appdirs::user_config_dir(Some("activitywatch"), None, false)?;
-    dir.push("aw-tauri");
+    dir.push("aw-app");
     fs::create_dir_all(dir.clone()).expect("Unable to create config dir");
     Ok(dir)
 }
@@ -33,7 +33,7 @@ pub fn get_config_dir() -> Result<PathBuf, ()> {
 #[cfg(not(target_os = "android"))]
 pub fn get_data_dir() -> Result<PathBuf, ()> {
     let mut dir = appdirs::user_data_dir(Some("activitywatch"), None, false)?;
-    dir.push("aw-tauri");
+    dir.push("aw-app");
     fs::create_dir_all(dir.clone()).expect("Unable to create data dir");
     Ok(dir)
 }
@@ -47,7 +47,7 @@ pub fn get_data_dir() -> Result<PathBuf, ()> {
 pub fn get_log_dir() -> Result<PathBuf, ()> {
     // Linux uses cache dir for logs
     let mut dir = appdirs::user_cache_dir(Some("activitywatch"), None)?;
-    dir.push("aw-tauri");
+    dir.push("aw-app");
     dir.push("log");
     fs::create_dir_all(dir.clone()).expect("Unable to create log dir");
     Ok(dir)
@@ -57,7 +57,7 @@ pub fn get_log_dir() -> Result<PathBuf, ()> {
 pub fn get_log_dir() -> Result<PathBuf, ()> {
     // Windows and macOS use dedicated log directories
     let mut dir = appdirs::user_log_dir(Some("activitywatch"), None)?;
-    dir.push("aw-tauri");
+    dir.push("aw-app");
     fs::create_dir_all(dir.clone()).expect("Unable to create log dir");
     Ok(dir)
 }
@@ -75,7 +75,7 @@ pub fn get_config_path() -> PathBuf {
 
 pub fn get_log_path() -> PathBuf {
     let mut path = get_log_dir().expect("Failed to get log dir");
-    path.push("aw-tauri.log");
+    path.push("aw-app.log");
     path
 }
 
@@ -85,7 +85,7 @@ pub fn get_runtime_dir() -> PathBuf {
     if let Ok(runtime_dir) = std::env::var("XDG_RUNTIME_DIR") {
         let mut dir = PathBuf::from(runtime_dir);
         dir.push("activitywatch");
-        dir.push("aw-tauri");
+        dir.push("aw-app");
         if let Ok(_) = fs::create_dir_all(dir.clone()) {
             return dir;
         }
@@ -93,7 +93,7 @@ pub fn get_runtime_dir() -> PathBuf {
     // Fallback to cache dir
     let mut dir = appdirs::user_cache_dir(Some("activitywatch"), None)
         .unwrap_or_else(|_| PathBuf::from("/tmp"));
-    dir.push("aw-tauri");
+    dir.push("aw-app");
     let _ = fs::create_dir_all(dir.clone());
     dir
 }
@@ -129,7 +129,7 @@ pub fn get_discovery_paths() -> Vec<PathBuf> {
             discovery_paths.push(
                 data_dir
                     .join("activitywatch")
-                    .join("aw-tauri")
+                    .join("aw-app")
                     .join("modules"),
             );
 

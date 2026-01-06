@@ -162,8 +162,8 @@ pub fn handle_first_run() {
             let app = &*get_app_handle().lock().expect("Failed to get app handle");
             app.notification()
                 .builder()
-                .title("Aw-Tauri")
-                .body("Welcome to Aw-Tauri! Click on the tray icon to launch the dashboard")
+                .title("ActivityWatch")
+                .body("Welcome to ActivityWatch! Click on the tray icon to launch the dashboard")
                 .show()
                 .expect("Failed to show first run notification");
             if let Some(window) = app.webview_windows().get("main") {

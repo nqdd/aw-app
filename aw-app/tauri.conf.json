@@ -1,12 +1,12 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "aw-tauri",
+  "productName": "aw-app",
   "version": "0.1.0",
   "identifier": "net.activitywatch.app",
   "app": {
     "windows": [
       {
-        "title": "aw-tauri",
+        "title": "aw-app",
         "width": 800,
         "height": 600,
         "visible": false

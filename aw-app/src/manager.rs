@@ -561,7 +561,7 @@ fn send_notification(content: &str) {
 #[cfg(unix)]
 fn discover_modules() -> BTreeMap<String, PathBuf> {
     let excluded = [
-        "aw-tauri",
+        "aw-app",
         "aw-client",
         "aw-cli",
         "aw-qt",
@@ -646,7 +646,7 @@ fn discover_modules() -> BTreeMap<String, PathBuf> {
 #[cfg(windows)]
 fn discover_modules() -> BTreeMap<String, PathBuf> {
     let excluded = [
-        "aw-tauri",
+        "aw-app",
         "aw-client",
         "aw-cli",
         "aw-qt",
