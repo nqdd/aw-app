@@ -26,7 +26,6 @@ dist-ssr
 # generated files
 aw-app/icons/*
 Cargo.lock
-Cargo.toml
 /target/
 
 # Python virtual environment and modules
